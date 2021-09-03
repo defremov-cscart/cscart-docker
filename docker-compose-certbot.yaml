@@ -1,0 +1,83 @@
+version: '3.7'
+
+services:
+
+  nginx:
+    image: ${REGISTRY}/cs-cart-nginx
+    command: /bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & cp -f /etc/nginx/templates/*.conf /etc/nginx/xtra/ & nginx -g "daemon off;"'
+    env_file:
+      - .env
+    volumes:
+      - ${CSCART_NGINX_CONF}:/etc/nginx/conf.d
+      - ${CSCART_NGINX_LOGS}:/var/log/nginx
+      - ${CSCART_HOME}:/var/www/html
+      - ${CERTBOT_DATA}/conf:/etc/letsencrypt
+      - ${CERTBOT_DATA}/www:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      cscart:
+        ipv4_address: 10.66.0.3
+        aliases:
+          - front
+          - nginx
+    container_name: nginx
+    depends_on:
+      - phpfpm
+    restart: unless-stopped
+
+  phpfpm:
+    image: ${REGISTRY}/cs-cart-phpfpm
+    volumes:
+      - ${CSCART_HOME}:/var/www/html
+    networks:
+      cscart:
+        ipv4_address: 10.66.0.4
+        aliases:
+          - php-fpm
+          - php
+          - back
+          - cron
+    container_name: php
+    restart: unless-stopped
+
+  mysql:
+    image: ${REGISTRY}/cs-cart-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${CSCART_MYSQL_RPASS}
+      MYSQL_DATABASE: ${CSCART_MYSQL_DB}
+      MYSQL_USER: ${CSCART_MYSQL_USER}
+      MYSQL_PASSWORD: ${CSCART_MYSQL_PASS}
+    command: mysqld --sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" --character_set_server="utf8" --character_set_filesystem="utf8" --collation-server="utf8_general_ci" --init-connect='SET NAMES utf8' --init_connect='SET collation_connection = utf8_general_ci' --skip-character-set-client-handshake
+    volumes:
+      - ${CSCART_MYSQL_LOGS}:/var/log:rw
+      - ${CSCART_MYSQL_DATA}:/var/lib/mysql:rw
+      - ${CSCART_MYSQL_CONF}:/etc/mysql/conf.d:ro
+    networks:
+      cscart:
+        ipv4_address: 10.66.0.5
+        aliases:
+          - db
+    container_name: mysql
+    restart: unless-stopped
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:v1.17.0
+    restart: unless-stopped
+    entrypoint:  "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      cscart:
+    volumes:
+      - ${CERTBOT_DATA}/conf:/etc/letsencrypt
+      - ${CERTBOT_DATA}/www:/var/www/certbot
+
+networks:
+  cscart:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 10.66.0.0/24
