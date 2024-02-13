@@ -1,10 +1,12 @@
 # cscart-docker
 
-This repo allows you to create an installation environment, obtain an SSL certificate and automatically renew it.
+This repo allows you to create an installation environment on clean dedicated server with public IPv4 address, obtain an SSL certificate and automatically renew it.
 
 Services for CS-Cart in docker containers include nginx, php-fpm + cron, mysql, fail2ban, redis, certbot, ftp and mail.
 
 ## Installation
+Tested on Ubuntu 22.04 (LTS) x64
+
 Required docker, docker compose plugin, curl, git, DNS A record point to server IP.
 
 Check [Official documentation](https://docs.docker.com/engine/install/ubuntu/) for docker install.
