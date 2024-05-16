@@ -91,7 +91,7 @@ mysql -h127.0.0.1 -u$MYSQL_DATABASE -p$MYSQL_PASSWORD $MYSQL_DATABASE
 **CSCART_PHP_CONF** - path to custom configs.
 
 ### Cron
-Create a cron job file in CSCART_CRON_DIR. Fro example full backup script start every day at 6.30 AM:
+Create a cron job file in CSCART_CRON_DIR. For example full backup script start every day at 6.30 AM:
 
 ```
 30 6 * * * root /usr/local/bin/php /var/www/html/admin.php --dispatch=datakeeper.backup --p --backup_database=Y --backup_files=Y --dbdump_tables=all --dbdump_data=Y --extra_folders[]=var/files --extra_folders[]=var/attachments --extra_folders[]=var/langs
