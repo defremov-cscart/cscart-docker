@@ -79,7 +79,7 @@ Connect to Mysql database:
 
 ```
 docker exec -ti mysql bash
-mysql -h127.0.0.1 -u$CSCART_MYSQL_USER -p$CSCART_MYSQL_PASS $CSCART_MYSQL_DB
+mysql -h127.0.0.1 -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE
 ```
 
 ### Fail2ban
