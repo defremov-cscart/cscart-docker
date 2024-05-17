@@ -1,8 +1,8 @@
 # cscart-docker
 
-This repo allows you to create an installation environment on clean dedicated server with public IPv4 address, obtain an SSL certificate and automatically renew it.
+This repository allows you to create an installation environment on a clean dedicated server with a public IPv4 address, obtain an SSL certificate, and automatically renew it.
 
-Services for CS-Cart in docker containers include nginx, php-fpm + cron, mysql, fail2ban, redis, certbot, ftp and mail.
+Services for CS-Cart in Docker containers include Nginx, PHP-FPM with Cron, MySQL, Fail2ban, Redis, Certbot, FTP, and mail.
 
 ## Installation
 Tested on Ubuntu 22.04 (LTS) x64
@@ -67,7 +67,7 @@ docker star/stop/restart *service-name* - star/stop/restart service with *servic
 
 ### Mysql
 
-Image contains default parameters, you need to customize mysql config for your server.
+The image contains default parameters; you need to customize the MySQL configuration for your server.
 
 **CSCART_MYSQL_CONF** - path to custom config
 
@@ -99,8 +99,8 @@ Create a cron job file in CSCART_CRON_DIR. For example full backup script start 
 
 ### Mail
 
-Image does not contains any DMARC, DKIM and other security configs.
+The image does not contain any DMARC, DKIM, or other security configurations.
 
-Most likely the mail will end up in spam folder.
+Most likely, the mail will end up in the spam folder.
 
-Use your custom SMTP server in CS-Cart preferences.
+Use your custom SMTP server in the CS-Cart preferences.
